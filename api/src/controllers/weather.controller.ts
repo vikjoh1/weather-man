@@ -1,6 +1,7 @@
 import { geocode } from "../api/geocode.api";
 import { getDailyWeatherData, getHourlyWeatherData } from "../api/openMeteo.api";
 import { Request, Response } from "express";
+import cache from "../helpers/cache";
 
 export async function getDaily(req: Request, res: Response) {
   const address = String(req.query.search)
@@ -9,6 +10,13 @@ export async function getDaily(req: Request, res: Response) {
     res.status(400).json({ error: 'Address missing' })
     return
   }
+
+  const cachedData = cache.get(address)
+  if (cachedData) {
+    res.json(cachedData)
+    return
+  }
+
   try {
     const places = await geocode(address) 
     const weatherDataForPlaces = await Promise.all(places.map(async (place: any) => {
@@ -20,6 +28,7 @@ export async function getDaily(req: Request, res: Response) {
         weatherData
       }
     }));
+    cache.set(address, weatherDataForPlaces)
     res.json(weatherDataForPlaces)
   } catch(error) {
     console.error(error)

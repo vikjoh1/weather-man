@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./api/
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./api/src/:/api/src/
+  frontend:
+    build: ./frontend/
+    ports:
+      - '5173:5173'
+    volumes:
+      - ./frontend/src/:/frontend/src/

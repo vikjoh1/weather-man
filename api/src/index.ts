@@ -3,7 +3,6 @@ dotenv.config()
 import express, { NextFunction, Request, Response } from 'express'
 import { hashPassword } from './auth/password'
 import { getCities, getDaily } from './controllers/weather.controller'
-import { getImage } from './controllers/image.controller'
 
 const app = express()
 const PORT = process.env.PORT
@@ -25,8 +24,6 @@ app.get('/', async (req: Request, res: Response) => {
 app.get('/cities', getCities)
 
 app.get('/daily', getDaily)
-
-app.get('/image', getImage)
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`)
